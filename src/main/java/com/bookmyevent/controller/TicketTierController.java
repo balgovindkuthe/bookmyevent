@@ -17,7 +17,6 @@ import java.util.List;
 public class TicketTierController {
 
     private final TicketTierService ticketTierService;
-
     @PostMapping
     public ResponseEntity<TicketTierResponseDTO> createTicketTier(
             @PathVariable Long eventId,

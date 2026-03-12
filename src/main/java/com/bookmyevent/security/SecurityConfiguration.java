@@ -25,12 +25,12 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.disable()) // Note: configure CORS properly in production
+                .cors(org.springframework.security.config.Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/events/**").permitAll() // Anyone can view events
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Swagger
-                                                                                                              // UI
+                        // UI
 
                         // Organizer only routes
                         .requestMatchers(HttpMethod.POST, "/api/v1/events/**").hasRole("ORGANIZER")
@@ -41,7 +41,7 @@ public class SecurityConfiguration {
 
                         // Customer only routes (Booking can be done by customer)
                         .requestMatchers("/api/v1/bookings/**").authenticated() // Simplification: any logged in.
-                                                                                // Ideally restrict creation to CUSTOMER
+                        // Ideally restrict creation to CUSTOMER
 
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
