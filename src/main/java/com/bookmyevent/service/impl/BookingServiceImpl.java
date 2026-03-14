@@ -85,35 +85,10 @@ public class BookingServiceImpl implements BookingService {
         booking.setStatus(BookingStatus.CONFIRMED);
         booking = bookingRepository.save(booking);
 
-        // 3. Generate Digital Tickets with UUIDs (simulating standard ticket qty, let's
-        // say 1 booking = 1 ticket logically
-        // OR read quantity from booking amount / tier price. For better design, we
-        // should store qty on Booking.
-        // Assuming we look up the tier. Let's find out how many were bought based on
-        // calculation.
-        // However, a simpler implementation is to create 1 ticket per booking for demo,
-        // or loop. Let's fix this.)
-
-        // Wait, booking needs `quantity` to generate multiple tickets, or we infer it.
-        // Let's assume single ticket per booking row to simplify for this 4-day sprint
-        // or compute it.
-        // As a mock workaround, let's create a single ticket representing the full
-        // booking total for simplicity
-        // or just calculate the quantity:
-        // For accurate tracking, this is how you'd do it if tier was known.
-        // As a fix: normally we save Ticket items immediately upon pending, just
-        // unconfirmed. Let's generate 1 ticket per booking for simple demo.
 
         Ticket ticket = new Ticket();
         ticket.setBooking(booking);
-        // We'll need the ticketTier. This assumes all tickets for a booking share a
-        // tier, or we'd need a BookingItem table.
-        // Since we didn't add BookingItem, we derive tier from the booking amount if
-        // needed or we must add Tier to Booking.
-        // *Correction*: System Design didn't have Booking Item. It assumes all tickets
-        // in a booking share the tier via some relation. Let's add Tier to Ticket, but
-        // we don't have it explicitly stored on Booking yet. Let's fetch the first
-        // valid tier from event for demonstration.
+
         TicketTier tier = ticketTierRepository.findByEventId(booking.getEvent().getId()).get(0);
         ticket.setTicketTier(tier);
         ticket.setQrCodeUuid(UUID.randomUUID().toString()); // UNIQUE SECURE UUID
